@@ -2,10 +2,10 @@ import React from "react";
 import AuthLayout from "./auth-layout";
 import { AuthProvider } from "@/providers/Auth";
 import type { Metadata } from "next";
-import "./globals.css";
+import "../globals.css";
 import { Inter } from "next/font/google";
 import { DOCS_LINK } from "@/constants";
-import { NuqsAdapter } from "nuqs/adapters/next/app";
+
 const inter = Inter({
   subsets: ["latin"],
   preload: true,
@@ -13,8 +13,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Open Agent Platform - Auth",
-  description: "Open Agent Platform by LangChain",
+  title: "FullStack Chat - Client",
+  description: "FullStack Chat - Client",
 };
 
 export default function Layout({
@@ -40,11 +40,9 @@ export default function Layout({
             </a>
           </div>
         )}
-        <NuqsAdapter>
-          <AuthProvider>
-            <AuthLayout>{children}</AuthLayout>
-          </AuthProvider>
-        </NuqsAdapter>
+        <AuthProvider>
+          <AuthLayout>{children}</AuthLayout>
+        </AuthProvider>
       </body>
     </html>
   );
