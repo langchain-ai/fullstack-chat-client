@@ -2,7 +2,7 @@ import { useAuthContext } from "@/providers/Auth";
 import React from "react";
 import type { User } from "@/lib/auth/types";
 import { useRouter } from "next/navigation";
-
+import { Badge } from "@/components/ui/badge";
 export function UserInfoSignOut() {
   const { user, signOut, isAuthenticated, isLoading } = useAuthContext();
 
@@ -51,10 +51,17 @@ function SignedInView({ user, signOut }: SignedInViewProps) {
         </div>
       )}
       <span
-        className="max-w-[120px] truncate text-sm font-medium"
+        className="max-w-[240px] truncate text-sm"
         title={user?.displayName || user?.email || undefined}
       >
         {user?.displayName || user?.email}
+        <Badge
+          variant="outline"
+          className="ml-2 rounded-sm px-2 py-1 text-xs"
+        >
+          {" "}
+          {user?.email}
+        </Badge>
       </span>
       <button
         className="ml-1 rounded border bg-white px-2 py-1 text-xs hover:bg-gray-50"
@@ -75,7 +82,7 @@ function SignedOutView() {
       <div className="flex h-8 w-8 items-center justify-center rounded-full border bg-gray-100 text-gray-400">
         <span className="text-lg font-bold">?</span>
       </div>
-      <span className="text-sm font-medium text-gray-500">Not signed in</span>
+
       <button
         className="ml-1 rounded border bg-white px-2 py-1 text-xs hover:bg-gray-50"
         onClick={() => router.push("/signin")}

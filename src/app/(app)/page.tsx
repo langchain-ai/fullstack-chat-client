@@ -7,19 +7,14 @@ import { ArtifactProvider } from "@/components/thread/artifact";
 import { Toaster } from "@/components/ui/sonner";
 import React from "react";
 import { UserInfoSignOut } from "@/features/user-auth-status";
-
+import { GraphDropdown } from "@/features/graph-dropdown";
+import { Select } from "@/components/ui/select";
+import { Navbar } from "@/components/navbar";
 export default function DemoPage(): React.ReactNode {
   return (
     <React.Suspense fallback={<div>Loading (layout)...</div>}>
       <Toaster />
-      <div className="mt-2 mb-4 flex w-full flex-col items-center">
-        <UserInfoSignOut />
-      </div>
-      <div className="mt-8 flex w-full flex-col items-center">
-        <h1 className="text-2xl font-semibold tracking-tight">
-          Fullstack Chat
-        </h1>
-      </div>
+      <Navbar />
       <ThreadProvider>
         <StreamProvider>
           <ArtifactProvider>

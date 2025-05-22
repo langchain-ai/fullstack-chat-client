@@ -1,4 +1,4 @@
-import { Deployment } from "@/types/deployment";
+import { Deployment } from "@/app/types/deployment";
 
 /**
  * Loads the provided deployments from the environment variable.
@@ -23,4 +23,15 @@ export function getDeployments(): Deployment[] {
     throw new Error("No default deployment found");
   }
   return deployments;
+}
+
+// Fetch Deployments from the server, using the JWT
+export async function fetchDeployments(jwt: string): Promise<Deployment[]> {
+  const res = await fetch("/api/deployments", {
+    headers: {
+      Authorization: `Bearer ${jwt}`,
+    },
+  });
+  if (!res.ok) throw new Error("Failed to fetch deployments");
+  return res.json();
 }
