@@ -37,7 +37,8 @@ export default function PricingPage() {
     {
       name: "Professional",
       price: isAnnual ? 79 : 99,
-      description: "For power users and teams needing advanced AI and integrations.",
+      description:
+        "For power users and teams needing advanced AI and integrations.",
       features: [
         "Up to 10,000 messages/month",
         "Access to advanced AI models",
@@ -166,7 +167,8 @@ export default function PricingPage() {
       <div className="mt-20 text-center">
         <h2 className="mb-4 text-2xl font-bold">Need something different?</h2>
         <p className="text-muted-foreground mx-auto mb-6 max-w-2xl">
-          Contact our team for custom AI chat solutions, higher message limits, or enterprise integrations tailored to your needs.
+          Contact our team for custom AI chat solutions, higher message limits,
+          or enterprise integrations tailored to your needs.
         </p>
         <Button
           variant="outline"
@@ -184,7 +186,9 @@ export default function PricingPage() {
           <div>
             <h4 className="mb-2 font-medium">Can I change my plan later?</h4>
             <p className="text-muted-foreground text-sm">
-              Yes, you can upgrade or downgrade your plan at any time. Changes take effect immediately and your message limits will adjust accordingly.
+              Yes, you can upgrade or downgrade your plan at any time. Changes
+              take effect immediately and your message limits will adjust
+              accordingly.
             </p>
           </div>
           <div>
@@ -192,13 +196,15 @@ export default function PricingPage() {
               What happens after my trial ends?
             </h4>
             <p className="text-muted-foreground text-sm">
-              You will remain on your selected plan. Your chat history and settings will always be preserved.
+              You will remain on your selected plan. Your chat history and
+              settings will always be preserved.
             </p>
           </div>
           <div>
             <h4 className="mb-2 font-medium">Do you offer refunds?</h4>
             <p className="text-muted-foreground text-sm">
-              Yes, we offer a 30-day money-back guarantee for all plans if you're not satisfied with your AI chat experience.
+              Yes, we offer a 30-day money-back guarantee for all plans if
+              you're not satisfied with your AI chat experience.
             </p>
           </div>
           <div>
@@ -206,7 +212,8 @@ export default function PricingPage() {
               Do you offer discounts for non-profits or education?
             </h4>
             <p className="text-muted-foreground text-sm">
-              Yes, we offer special pricing for non-profit organizations and educational institutions. Please contact our team for details.
+              Yes, we offer special pricing for non-profit organizations and
+              educational institutions. Please contact our team for details.
             </p>
           </div>
         </div>
