@@ -1,8 +1,4 @@
-import React, {
-  createContext,
-  useContext,
-  ReactNode,
-} from "react";
+import React, { createContext, useContext, ReactNode } from "react";
 import { useStream } from "@langchain/langgraph-sdk/react";
 import { type Message } from "@langchain/langgraph-sdk";
 import {
@@ -43,8 +39,6 @@ async function sleep(ms = 4000) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-
-
 const StreamSession = ({
   children,
   apiUrl,
@@ -83,7 +77,6 @@ const StreamSession = ({
       sleep().then(() => getThreads().then(setThreads).catch(console.error));
     },
   });
-
 
   return (
     <StreamContext.Provider value={streamValue}>
