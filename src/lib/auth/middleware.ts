@@ -2,11 +2,8 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 const NO_AUTH_PATHS = [
-  "/debug-auth",
   "/signin",
   "/signup",
-  "/forgot-password",
-  "/reset-password",
   "/api/auth",
 ];
 
@@ -80,12 +77,6 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  // Redirect users from the /inbox page to the homepage
-  if (request.nextUrl.pathname.startsWith("/inbox")) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/";
-    return NextResponse.redirect(url);
-  }
 
   // IMPORTANT: You *must* return the supabaseResponse object as it is.
   // If you're creating a new response object with NextResponse.next() make sure to:

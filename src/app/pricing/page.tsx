@@ -22,13 +22,13 @@ export default function PricingPage() {
       name: "Starter",
       price: isAnnual ? 29 : 39,
       description:
-        "Perfect for individuals and small teams just getting started.",
+        "Great for individuals exploring AI chat, personal productivity, and light research.",
       features: [
-        "Up to 3 team members",
-        "5 projects",
-        "10GB storage",
-        "Basic analytics",
-        "24-hour support response time",
+        "Up to 1,000 messages/month",
+        "Access to standard AI model",
+        "Basic conversation history",
+        "Personal workspace",
+        "Community support (24h response)",
       ],
       cta: "Start for free",
       ctaDescription: "No credit card required",
@@ -37,15 +37,15 @@ export default function PricingPage() {
     {
       name: "Professional",
       price: isAnnual ? 79 : 99,
-      description: "Ideal for growing teams with advanced needs.",
+      description: "For power users and teams needing advanced AI and integrations.",
       features: [
-        "Up to 10 team members",
-        "Unlimited projects",
-        "50GB storage",
-        "Advanced analytics",
-        "Priority support (12 hours)",
-        "Custom domains",
-        "API access",
+        "Up to 10,000 messages/month",
+        "Access to advanced AI models",
+        "Team workspaces & sharing",
+        "Conversation export & API access",
+        "Priority support (12h)",
+        "Integrations (Slack, Zapier, etc.)",
+        "Custom AI personas",
       ],
       cta: "Start 14-day trial",
       ctaDescription: "No credit card required",
@@ -55,18 +55,17 @@ export default function PricingPage() {
       name: "Enterprise",
       price: isAnnual ? 299 : 349,
       description:
-        "For organizations with complex requirements and large teams.",
+        "For organizations with high-volume needs, custom security, and dedicated support.",
       features: [
-        "Unlimited team members",
-        "Unlimited projects",
-        "Unlimited storage",
-        "Custom analytics",
-        "Dedicated support (4 hours)",
-        "Custom domains",
-        "Advanced API access",
-        "SSO authentication",
-        "Audit logs",
+        "Unlimited messages",
+        "Dedicated AI model instances",
+        "Advanced admin controls",
+        "Custom integrations",
+        "Dedicated support (4h)",
+        "SSO & compliance",
+        "Audit logs & analytics",
         "SLA guarantees",
+        "Onboarding & training",
       ],
       cta: "Contact sales",
       ctaDescription: "Get a custom quote",
@@ -78,11 +77,10 @@ export default function PricingPage() {
     <div className="container mx-auto max-w-7xl px-4 py-24">
       <div className="mb-16 text-center">
         <h1 className="mb-4 text-4xl font-bold tracking-tight">
-          Simple, transparent pricing
+          Simple, transparent AI chat pricing
         </h1>
         <p className="text-muted-foreground mx-auto max-w-2xl text-xl">
-          Choose the perfect plan for your team. All plans include a 14-day
-          trial period.
+          Choose the perfect plan for your AI chat experience.
         </p>
 
         <div className="mt-8 flex items-center justify-center space-x-2">
@@ -168,8 +166,7 @@ export default function PricingPage() {
       <div className="mt-20 text-center">
         <h2 className="mb-4 text-2xl font-bold">Need something different?</h2>
         <p className="text-muted-foreground mx-auto mb-6 max-w-2xl">
-          Contact our sales team for custom pricing options tailored to your
-          specific requirements.
+          Contact our team for custom AI chat solutions, higher message limits, or enterprise integrations tailored to your needs.
         </p>
         <Button
           variant="outline"
@@ -187,8 +184,7 @@ export default function PricingPage() {
           <div>
             <h4 className="mb-2 font-medium">Can I change my plan later?</h4>
             <p className="text-muted-foreground text-sm">
-              Yes, you can upgrade or downgrade your plan at any time. Changes
-              take effect immediately.
+              Yes, you can upgrade or downgrade your plan at any time. Changes take effect immediately and your message limits will adjust accordingly.
             </p>
           </div>
           <div>
@@ -196,24 +192,21 @@ export default function PricingPage() {
               What happens after my trial ends?
             </h4>
             <p className="text-muted-foreground text-sm">
-              After your 14-day trial, you'll be automatically switched to your
-              selected plan unless you cancel.
+              You will remain on your selected plan. Your chat history and settings will always be preserved.
             </p>
           </div>
           <div>
             <h4 className="mb-2 font-medium">Do you offer refunds?</h4>
             <p className="text-muted-foreground text-sm">
-              Yes, we offer a 30-day money-back guarantee for all plans if
-              you're not satisfied.
+              Yes, we offer a 30-day money-back guarantee for all plans if you're not satisfied with your AI chat experience.
             </p>
           </div>
           <div>
             <h4 className="mb-2 font-medium">
-              Do you offer discounts for non-profits?
+              Do you offer discounts for non-profits or education?
             </h4>
             <p className="text-muted-foreground text-sm">
-              Yes, we offer special pricing for non-profit organizations. Please
-              contact our sales team.
+              Yes, we offer special pricing for non-profit organizations and educational institutions. Please contact our team for details.
             </p>
           </div>
         </div>
