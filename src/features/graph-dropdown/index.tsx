@@ -8,7 +8,7 @@ import {
   SelectItem,
   SelectValue,
 } from "@/components/ui/select";
-import { fetchDeployments } from "@/lib/environment/deployments";
+import { getDeployments } from "@/lib/environment/deployments";
 import { Deployment } from "@/app/types/deployment";
 import { Badge } from "@/components/ui/badge";
 
@@ -20,12 +20,24 @@ export function GraphDropdown() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!jwt) return;
+    // Only load deployments if user is authenticated
+    if (!jwt) {
+      setDeployments([]);
+      setLoading(false);
+      return;
+    }
+
     setLoading(true);
-    fetchDeployments(jwt)
-      .then(setDeployments)
-      .catch(() => setDeployments([]))
-      .finally(() => setLoading(false));
+    // For local development, use static deployments
+    try {
+      const localDeployments = getDeployments();
+      setDeployments(localDeployments);
+    } catch (error) {
+      console.error("Failed to load deployments:", error);
+      setDeployments([]);
+    } finally {
+      setLoading(false);
+    }
   }, [jwt]);
 
   if (loading)
@@ -42,7 +54,7 @@ export function GraphDropdown() {
           variant="outline"
           className="mt-2 ml-2 rounded-sm px-2 py-1 text-xs"
         >
-          No graphs
+          {!jwt ? "Sign in to access graphs" : "No graphs"}
         </Badge>
       </div>
     );
