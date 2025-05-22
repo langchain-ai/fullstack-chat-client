@@ -2,8 +2,6 @@ import React, {
   createContext,
   useContext,
   ReactNode,
-  useState,
-  useEffect,
 } from "react";
 import { useStream } from "@langchain/langgraph-sdk/react";
 import { type Message } from "@langchain/langgraph-sdk";
@@ -20,10 +18,8 @@ import { Button } from "@/components/ui/button";
 import { LangGraphLogoSVG } from "@/components/icons/langgraph";
 import { Label } from "@/components/ui/label";
 import { ArrowRight } from "lucide-react";
-import { PasswordInput } from "@/components/ui/password-input";
-import { getApiKey } from "@/lib/api-key";
+
 import { useThreads } from "./Thread";
-import { toast } from "sonner";
 import { useAuthContext } from "@/providers/Auth";
 
 export type StateType = { messages: Message[]; ui?: UIMessage[] };
@@ -47,25 +43,7 @@ async function sleep(ms = 4000) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-async function checkGraphStatus(
-  apiUrl: string,
-  jwt?: string,
-): Promise<boolean> {
-  try {
-    const res = await fetch(`${apiUrl}/info`, {
-      headers: jwt
-        ? {
-            Authorization: `Bearer ${jwt}`,
-            "x-supabase-access-token": jwt,
-          }
-        : undefined,
-    });
-    return res.ok;
-  } catch (e) {
-    console.error(e);
-    return false;
-  }
-}
+
 
 const StreamSession = ({
   children,
@@ -106,23 +84,6 @@ const StreamSession = ({
     },
   });
 
-  useEffect(() => {
-    checkGraphStatus(apiUrl, jwt).then((ok) => {
-      if (!ok) {
-        toast.error("Failed to connect to LangGraph server", {
-          description: () => (
-            <p>
-              Please ensure your graph is running at <code>{apiUrl}</code> and
-              you are authenticated (JWT/Supabase).
-            </p>
-          ),
-          duration: 10000,
-          richColors: true,
-          closeButton: true,
-        });
-      }
-    });
-  }, [apiUrl, jwt]);
 
   return (
     <StreamContext.Provider value={streamValue}>

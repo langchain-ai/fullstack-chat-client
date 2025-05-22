@@ -1,5 +1,5 @@
 import { validate } from "uuid";
-import { getApiKey } from "@/lib/api-key";
+
 import { Thread } from "@langchain/langgraph-sdk";
 import { useQueryState } from "nuqs";
 import {
@@ -52,7 +52,7 @@ export function ThreadProvider({ children }: { children: ReactNode }) {
       "jwt=",
       jwt,
     );
-    const client = createClient(apiUrl, undefined, jwt);
+    const client = createClient(apiUrl, jwt);
     console.log("[ThreadProvider] Created client", client);
 
     const threads = await client.threads.search({
