@@ -87,7 +87,7 @@ const StreamSession = ({
     defaultHeaders: jwt
       ? {
           Authorization: `Bearer ${jwt}`,
-          "x-supabase-access-token": jwt
+          "x-supabase-access-token": jwt,
         }
       : undefined,
     onCustomEvent: (event, options) => {
@@ -150,8 +150,6 @@ export const StreamProvider: React.FC<{ children: ReactNode }> = ({
   const [assistantId, setAssistantId] = useQueryState("assistantId", {
     defaultValue: envAssistantId || "",
   });
-
-
 
   // Determine final values to use, prioritizing URL params then env vars
   const finalApiUrl = apiUrl || envApiUrl;
@@ -233,7 +231,6 @@ export const StreamProvider: React.FC<{ children: ReactNode }> = ({
                 is only used to authenticate requests sent to your LangGraph
                 server.
               </p>
-
             </div>
 
             <div className="mt-2 flex justify-end">

@@ -44,7 +44,14 @@ export function ThreadProvider({ children }: { children: ReactNode }) {
   const getThreads = useCallback(async (): Promise<Thread[]> => {
     if (!apiUrl || !assistantId) return [];
     const jwt = session?.accessToken || undefined;
-    console.log("[ThreadProvider] getThreads: apiUrl=", apiUrl, "assistantId=", assistantId, "jwt=", jwt);
+    console.log(
+      "[ThreadProvider] getThreads: apiUrl=",
+      apiUrl,
+      "assistantId=",
+      assistantId,
+      "jwt=",
+      jwt,
+    );
     const client = createClient(apiUrl, undefined, jwt);
     console.log("[ThreadProvider] Created client", client);
 
