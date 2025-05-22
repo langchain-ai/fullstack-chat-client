@@ -79,32 +79,21 @@ export function Navbar() {
                   href="/"
                   className="text-lg font-medium"
                 >
-                  Home
+                  Chat
                 </Link>
                 <Link
-                  href="/about"
+                  href="/pricing"
                   className="text-lg font-medium"
                 >
-                  About
+                  Pricing
                 </Link>
-                <Link
-                  href="/products"
-                  className="text-lg font-medium"
-                >
-                  Products
-                </Link>
-                <Link
-                  href="/contact"
-                  className="text-lg font-medium"
-                >
-                  Contact
-                </Link>
+
                 <div className="mt-4 flex flex-col gap-2">
                   <Button
                     variant="outline"
                     asChild
                   >
-                    <Link href="/login">Login</Link>
+                    <Link href="/signin">Login</Link>
                   </Button>
                   <Button asChild>
                     <Link href="/signup">Sign up</Link>

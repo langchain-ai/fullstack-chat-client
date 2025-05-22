@@ -89,6 +89,12 @@ function SignedOutView() {
       >
         Sign In
       </button>
+      <button
+        className="ml-1 rounded border bg-white px-2 py-1 text-xs hover:bg-gray-50"
+        onClick={() => router.push("/signup")}
+      >
+        Sign Up
+      </button>
     </div>
   );
 }
