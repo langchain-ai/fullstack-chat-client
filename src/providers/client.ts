@@ -2,17 +2,18 @@ import { Client } from "@langchain/langgraph-sdk";
 
 export function createClient(
   apiUrl: string,
-  apiKey: string | undefined,
   jwt?: string,
 ) {
-  return new Client({
-    apiKey,
-    apiUrl,
-    ...(jwt && {
-      headers: {
+  console.log("[createClient] apiUrl=", apiUrl, "jwt=", jwt);
+  const headers = jwt
+    ? {
         Authorization: `Bearer ${jwt}`,
-        "x-supabase-access-token": jwt,
-      },
-    }),
+        "x-supabase-access-token": jwt
+      }
+    : undefined;
+  console.log("[createClient] headers=", headers);
+  return new Client({
+    apiUrl,
+    ...(headers && { headers }),
   });
 }

@@ -49,17 +49,17 @@ async function sleep(ms = 4000) {
 
 async function checkGraphStatus(
   apiUrl: string,
-  apiKey: string | null,
+  jwt?: string,
 ): Promise<boolean> {
   try {
     const res = await fetch(`${apiUrl}/info`, {
-      ...(apiKey && {
-        headers: {
-          "X-Api-Key": apiKey,
-        },
-      }),
+      headers: jwt
+        ? {
+            Authorization: `Bearer ${jwt}`,
+            "x-supabase-access-token": jwt,
+          }
+        : undefined,
     });
-
     return res.ok;
   } catch (e) {
     console.error(e);
@@ -69,12 +69,10 @@ async function checkGraphStatus(
 
 const StreamSession = ({
   children,
-  apiKey,
   apiUrl,
   assistantId,
 }: {
   children: ReactNode;
-  apiKey: string | null;
   apiUrl: string;
   assistantId: string;
 }) => {
@@ -84,13 +82,12 @@ const StreamSession = ({
   const jwt = session?.accessToken || undefined;
   const streamValue = useTypedStream({
     apiUrl,
-    apiKey: apiKey ?? undefined,
     assistantId,
     threadId: threadId ?? null,
     defaultHeaders: jwt
       ? {
           Authorization: `Bearer ${jwt}`,
-          "x-supabase-access-token": jwt,
+          "x-supabase-access-token": jwt
         }
       : undefined,
     onCustomEvent: (event, options) => {
@@ -110,13 +107,13 @@ const StreamSession = ({
   });
 
   useEffect(() => {
-    checkGraphStatus(apiUrl, apiKey).then((ok) => {
+    checkGraphStatus(apiUrl, jwt).then((ok) => {
       if (!ok) {
         toast.error("Failed to connect to LangGraph server", {
           description: () => (
             <p>
               Please ensure your graph is running at <code>{apiUrl}</code> and
-              your API key is correctly set (if connecting to a deployed graph).
+              you are authenticated (JWT/Supabase).
             </p>
           ),
           duration: 10000,
@@ -125,7 +122,7 @@ const StreamSession = ({
         });
       }
     });
-  }, [apiKey, apiUrl]);
+  }, [apiUrl, jwt]);
 
   return (
     <StreamContext.Provider value={streamValue}>
@@ -154,16 +151,7 @@ export const StreamProvider: React.FC<{ children: ReactNode }> = ({
     defaultValue: envAssistantId || "",
   });
 
-  // For API key, use localStorage with env var fallback
-  const [apiKey, _setApiKey] = useState(() => {
-    const storedKey = getApiKey();
-    return storedKey || "";
-  });
 
-  const setApiKey = (key: string) => {
-    window.localStorage.setItem("lg:chat:apiKey", key);
-    _setApiKey(key);
-  };
 
   // Determine final values to use, prioritizing URL params then env vars
   const finalApiUrl = apiUrl || envApiUrl;
@@ -194,10 +182,8 @@ export const StreamProvider: React.FC<{ children: ReactNode }> = ({
               const formData = new FormData(form);
               const apiUrl = formData.get("apiUrl") as string;
               const assistantId = formData.get("assistantId") as string;
-              const apiKey = formData.get("apiKey") as string;
 
               setApiUrl(apiUrl);
-              setApiKey(apiKey);
               setAssistantId(assistantId);
 
               form.reset();
@@ -247,13 +233,7 @@ export const StreamProvider: React.FC<{ children: ReactNode }> = ({
                 is only used to authenticate requests sent to your LangGraph
                 server.
               </p>
-              <PasswordInput
-                id="apiKey"
-                name="apiKey"
-                defaultValue={apiKey ?? ""}
-                className="bg-background"
-                placeholder="lsv2_pt_..."
-              />
+
             </div>
 
             <div className="mt-2 flex justify-end">
@@ -273,7 +253,6 @@ export const StreamProvider: React.FC<{ children: ReactNode }> = ({
 
   return (
     <StreamSession
-      apiKey={apiKey}
       apiUrl={apiUrl}
       assistantId={assistantId}
     >
