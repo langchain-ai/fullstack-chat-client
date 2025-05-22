@@ -24,6 +24,7 @@ import { PasswordInput } from "@/components/ui/password-input";
 import { getApiKey } from "@/lib/api-key";
 import { useThreads } from "./Thread";
 import { toast } from "sonner";
+import { useAuthContext } from "@/providers/Auth";
 
 export type StateType = { messages: Message[]; ui?: UIMessage[] };
 
@@ -79,11 +80,19 @@ const StreamSession = ({
 }) => {
   const [threadId, setThreadId] = useQueryState("threadId");
   const { getThreads, setThreads } = useThreads();
+  const { session } = useAuthContext();
+  const jwt = session?.accessToken || undefined;
   const streamValue = useTypedStream({
     apiUrl,
     apiKey: apiKey ?? undefined,
     assistantId,
     threadId: threadId ?? null,
+    defaultHeaders: jwt
+      ? {
+          Authorization: `Bearer ${jwt}`,
+          "x-supabase-access-token": jwt,
+        }
+      : undefined,
     onCustomEvent: (event, options) => {
       if (isUIMessage(event) || isRemoveUIMessage(event)) {
         options.mutate((prev) => {
