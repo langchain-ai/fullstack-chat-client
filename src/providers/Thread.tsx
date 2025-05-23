@@ -35,35 +35,50 @@ function getThreadSearchMetadata(
 }
 
 export function ThreadProvider({ children }: { children: ReactNode }) {
-  const [apiUrl] = useQueryState("apiUrl");
-  const [assistantId] = useQueryState("assistantId");
+  // Get environment variables
+  const envApiUrl: string | undefined = process.env.NEXT_PUBLIC_API_URL;
+  const envAssistantId: string | undefined =
+    process.env.NEXT_PUBLIC_ASSISTANT_ID;
+
+  // Use URL params with env var fallbacks
+  const [apiUrl] = useQueryState("apiUrl", {
+    defaultValue: envApiUrl || "",
+  });
+  const [assistantId] = useQueryState("assistantId", {
+    defaultValue: envAssistantId || "",
+  });
+
+  // Determine final values to use, prioritizing URL params then env vars
+  const finalApiUrl = apiUrl || envApiUrl;
+  const finalAssistantId = assistantId || envAssistantId;
+
   const [threads, setThreads] = useState<Thread[]>([]);
   const [threadsLoading, setThreadsLoading] = useState(false);
   const { session } = useAuthContext();
 
   const getThreads = useCallback(async (): Promise<Thread[]> => {
-    if (!apiUrl || !assistantId) return [];
+    if (!finalApiUrl || !finalAssistantId) return [];
     const jwt = session?.accessToken || undefined;
     console.log(
       "[ThreadProvider] getThreads: apiUrl=",
-      apiUrl,
+      finalApiUrl,
       "assistantId=",
-      assistantId,
+      finalAssistantId,
       "jwt=",
       jwt,
     );
-    const client = createClient(apiUrl, jwt);
+    const client = createClient(finalApiUrl, jwt);
     console.log("[ThreadProvider] Created client", client);
 
     const threads = await client.threads.search({
       metadata: {
-        ...getThreadSearchMetadata(assistantId),
+        ...getThreadSearchMetadata(finalAssistantId),
       },
       limit: 100,
     });
     console.log("[ThreadProvider] threads result", threads);
     return threads;
-  }, [apiUrl, assistantId, session]);
+  }, [finalApiUrl, finalAssistantId, session]);
 
   const value = {
     getThreads,
