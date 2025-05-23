@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { SupabaseAuthProvider } from "@/lib/auth/supabase";
+import { SupabaseAuthProvider } from "@/lib/auth/supabase-utils";
 import {
   AuthProvider as CustomAuthProvider,
   Session,
@@ -87,10 +87,12 @@ export function AuthProvider({
 
   // Set up auth state change listener
   useEffect(() => {
-    const { unsubscribe } = provider.onAuthStateChange((newSession) => {
-      setSession(newSession);
-      setUser(newSession?.user || null);
-    });
+    const { unsubscribe } = provider.onAuthStateChange(
+      (newSession: Session | null) => {
+        setSession(newSession);
+        setUser(newSession?.user || null);
+      },
+    );
 
     return () => {
       unsubscribe();

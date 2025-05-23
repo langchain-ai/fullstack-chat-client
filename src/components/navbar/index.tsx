@@ -129,26 +129,3 @@ const ListItem = React.forwardRef<
   );
 });
 ListItem.displayName = "ListItem";
-
-const products = [
-  {
-    title: "Product 1",
-    href: "/products/product-1",
-    description: "This is a description for product 1.",
-  },
-  {
-    title: "Product 2",
-    href: "/products/product-2",
-    description: "This is a description for product 2.",
-  },
-  {
-    title: "Product 3",
-    href: "/products/product-3",
-    description: "This is a description for product 3.",
-  },
-  {
-    title: "Product 4",
-    href: "/products/product-4",
-    description: "This is a description for product 4.",
-  },
-];

@@ -137,7 +137,7 @@ export function useFileUpload({
         : [];
       setContentBlocks((prev) => [...prev, ...newBlocks]);
     };
-    const handleWindowDragEnd = (e: DragEvent) => {
+    const handleWindowDragEnd = () => {
       dragCounter.current = 0;
       setDragOver(false);
     };

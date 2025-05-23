@@ -142,7 +142,7 @@ export async function POST(request: Request) {
         console.log("Update data:", updateData);
 
         // Update the user's subscription and credits in one operation
-        const { data, error } = await supabaseServer
+        const { error } = await supabaseServer
           .from("users")
           .upsert(updateData, {
             onConflict: "id",

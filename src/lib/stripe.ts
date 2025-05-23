@@ -57,7 +57,7 @@ export async function getCustomerSubscription(userId: string) {
 export async function addUserCredits(userId: string, creditsToAdd: number) {
   try {
     // Add credits to user's balance
-    const { data: currentUser, error: fetchError } = await supabase
+    const { data: currentUser } = await supabase
       .from("users")
       .select("credits_available")
       .eq("id", userId)
