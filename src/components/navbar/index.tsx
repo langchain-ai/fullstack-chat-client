@@ -16,6 +16,7 @@ import {
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { UserInfoSignOut } from "@/features/user-auth-status";
 import { GraphDropdown } from "@/features/graph-dropdown";
+import { CreditsDisplay } from "@/components/credits-display";
 
 export function Navbar() {
   return (
@@ -31,32 +32,25 @@ export function Navbar() {
           <NavigationMenu>
             <NavigationMenuList>
               <NavigationMenuItem>
-                <Link
-                  href="/"
-                  legacyBehavior
-                  passHref
-                >
-                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                <NavigationMenuLink className={navigationMenuTriggerStyle()} asChild>
+                  <Link href="/">
                     Chat
-                  </NavigationMenuLink>
-                </Link>
+                  </Link>
+                </NavigationMenuLink>
               </NavigationMenuItem>
               <NavigationMenuItem>
-                <Link
-                  href="/pricing"
-                  legacyBehavior
-                  passHref
-                >
-                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                <NavigationMenuLink className={navigationMenuTriggerStyle()} asChild>
+                  <Link href="/pricing">
                     Pricing
-                  </NavigationMenuLink>
-                </Link>
+                  </Link>
+                </NavigationMenuLink>
               </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
         </div>
         <div className="ml-auto flex items-center space-x-4">
-          <div className="hidden md:flex">
+          <div className="hidden md:flex items-center space-x-3">
+            <CreditsDisplay />
             <UserInfoSignOut />
             <GraphDropdown />
           </div>
@@ -73,6 +67,9 @@ export function Navbar() {
             </SheetTrigger>
             <SheetContent side="right">
               <nav className="flex flex-col gap-4">
+                <div className="mb-4">
+                  <CreditsDisplay />
+                </div>
                 <Link
                   href="/"
                   className="text-lg font-medium"
