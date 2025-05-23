@@ -7,42 +7,44 @@ Agent Chat UI is a Next.js application which enables chatting with any LangGraph
 
 ## Setup
 
-> [!TIP]
-> Don't want to run the app locally? Use the deployed site here: [agentchat.vercel.app](https://agentchat.vercel.app)!
-
-First, clone the repository, or run the [`npx` command](https://www.npmjs.com/package/create-agent-chat-app):
+1. Clone both repos 
 
 ```bash
-npx create-agent-chat-app
+git clone https://github.com/starmorph/fullstack-chat-server/tree/main
+
+git clone https://github.com/starmorph/fullstack-chat-client
 ```
 
-Stripe Local webhook testing (stripe-cli)
-
-```
- stripe listen --events customer.subscription.created,customer.subscription.updated,customer.subscription.deleted --forward-to localhost:3000/api/webhooks/stripe
-```
-
-or
-
+### Terminal Tab 1: Server
 ```bash
-git clone https://github.com/langchain-ai/agent-chat-ui.git
-
-cd agent-chat-ui
+1. cp .env.example .env
+2. fill out env
+3. yarn 
+4. npx @langchain/langgraph-cli dev --no-browser
 ```
 
-Install dependencies:
-
+### Terminal Tab 2: Client
 ```bash
-pnpm install
+1. cp .env.example .env
+2. fill out env
+3. pnpm i && pnpm dev
 ```
 
-Run the app:
-
+### Terminal Tab 3: Stripe Webhook (for purchases + credits)
 ```bash
-pnpm dev
+stripe listen --events customer.subscription.created,customer.subscription.updated,customer.subscription.deleted --forward-to localhost:3000/api/webhooks/stripe
 ```
 
-The app will be available at `http://localhost:3000`.
+### Use the App 
+```markdown 
+1. Open localhost:3000
+2. Sign up -> confirm email
+3. login 
+4. pricing page --> purchase credits
+	a. should see stripe events in Terminal Tab 3
+5. should see success page, new credits added
+6. back to home, chat with app, credits get deducted 
+```
 
 ## Usage
 
