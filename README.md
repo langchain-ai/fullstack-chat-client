@@ -15,7 +15,10 @@ First, clone the repository, or run the [`npx` command](https://www.npmjs.com/pa
 ```bash
 npx create-agent-chat-app
 ```
-
+Stripe Local webhook testing (stripe-cli)
+```
+ stripe listen --events customer.subscription.created,customer.subscription.updated,customer.subscription.deleted --forward-to localhost:3000/api/webhooks/stripe
+ ```
 or
 
 ```bash
