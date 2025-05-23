@@ -50,8 +50,9 @@ const StreamSession = ({
 }) => {
   const [threadId, setThreadId] = useQueryState("threadId");
   const { getThreads, setThreads } = useThreads();
-  const { session } = useAuthContext();
+  const { session, isLoading: authLoading } = useAuthContext();
   const jwt = session?.accessToken || undefined;
+
   const streamValue = useTypedStream({
     apiUrl,
     assistantId,
@@ -77,6 +78,18 @@ const StreamSession = ({
       sleep().then(() => getThreads().then(setThreads).catch(console.error));
     },
   });
+
+  // Don't render children until auth is fully loaded
+  if (authLoading) {
+    return (
+      <div className="flex min-h-screen w-full items-center justify-center">
+        <div className="text-center">
+          <div className="border-primary mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-b-2"></div>
+          <p className="text-muted-foreground">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <StreamContext.Provider value={streamValue}>

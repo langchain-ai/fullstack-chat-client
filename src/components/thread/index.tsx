@@ -46,6 +46,7 @@ import {
   ArtifactTitle,
   useArtifactContext,
 } from "./artifact";
+import { useCreditDeduction } from "@/hooks/use-credit-deduction";
 
 function StickyToBottomContent(props: {
   content: ReactNode;
@@ -145,6 +146,8 @@ export function Thread() {
 
   const lastError = useRef<string | undefined>(undefined);
 
+  const { deductCredits } = useCreditDeduction();
+
   const setThreadId = (id: string | null) => {
     _setThreadId(id);
 
@@ -195,10 +198,18 @@ export function Thread() {
     prevMessageLength.current = messages.length;
   }, [messages]);
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if ((input.trim().length === 0 && contentBlocks.length === 0) || isLoading)
       return;
+
+    // Deduct 1 credit before making the LLM request
+    const creditResult = await deductCredits({ reason: "send message" });
+
+    if (!creditResult.success) {
+      return;
+    }
+
     setFirstTokenReceived(false);
 
     const newHumanMessage: Message = {
@@ -215,36 +226,108 @@ export function Thread() {
     const context =
       Object.keys(artifactContext).length > 0 ? artifactContext : undefined;
 
-    stream.submit(
-      { messages: [...toolMessages, newHumanMessage], context },
-      {
-        streamMode: ["values"],
-        optimisticValues: (prev) => ({
-          ...prev,
-          context,
-          messages: [
-            ...(prev.messages ?? []),
-            ...toolMessages,
-            newHumanMessage,
-          ],
-        }),
-      },
-    );
+    try {
+      stream.submit(
+        { messages: [...toolMessages, newHumanMessage], context },
+        {
+          streamMode: ["values"],
+          optimisticValues: (prev) => ({
+            ...prev,
+            context,
+            messages: [
+              ...(prev.messages ?? []),
+              ...toolMessages,
+              newHumanMessage,
+            ],
+          }),
+        },
+      );
 
-    setInput("");
-    setContentBlocks([]);
+      setInput("");
+      setContentBlocks([]);
+    } catch (error: any) {
+      // Handle server overload and other errors
+      if (
+        error?.error?.type === "overloaded_error" ||
+        error?.message?.includes("Overloaded")
+      ) {
+        // Refund credits for overloaded server
+        if (creditResult.refundCredits) {
+          await creditResult.refundCredits();
+        }
+
+        toast.error("Server temporarily overloaded", {
+          description:
+            "The AI server is busy. Please try again in a moment. Your credit has been refunded.",
+          duration: 6000,
+        });
+      } else {
+        // For other errors, still refund credits since the request failed
+        if (creditResult.refundCredits) {
+          await creditResult.refundCredits();
+        }
+
+        toast.error("Request failed", {
+          description:
+            "There was an error processing your message. Your credit has been refunded.",
+          duration: 5000,
+        });
+      }
+
+      console.error("Submit error:", error);
+    }
   };
 
-  const handleRegenerate = (
+  const handleRegenerate = async (
     parentCheckpoint: Checkpoint | null | undefined,
   ) => {
+    // Deduct 1 credit before making the LLM request
+    const creditResult = await deductCredits({ reason: "regenerate message" });
+
+    if (!creditResult.success) {
+      return;
+    }
+
     // Do this so the loading state is correct
     prevMessageLength.current = prevMessageLength.current - 1;
     setFirstTokenReceived(false);
-    stream.submit(undefined, {
-      checkpoint: parentCheckpoint,
-      streamMode: ["values"],
-    });
+
+    try {
+      stream.submit(undefined, {
+        checkpoint: parentCheckpoint,
+        streamMode: ["values"],
+      });
+    } catch (error: any) {
+      // Handle server overload and other errors
+      if (
+        error?.error?.type === "overloaded_error" ||
+        error?.message?.includes("Overloaded")
+      ) {
+        // Refund credits for overloaded server
+        if (creditResult.refundCredits) {
+          await creditResult.refundCredits();
+        }
+
+        toast.error("Server temporarily overloaded", {
+          description:
+            "The AI server is busy. Please try again in a moment. Your credit has been refunded.",
+          duration: 6000,
+        });
+      } else {
+        // For other errors, still refund credits since the request failed
+        if (creditResult.refundCredits) {
+          await creditResult.refundCredits();
+        }
+
+        toast.error("Regeneration failed", {
+          description:
+            "There was an error regenerating the message. Your credit has been refunded.",
+          duration: 5000,
+        });
+      }
+
+      console.error("Regenerate error:", error);
+    }
   };
 
   const chatStarted = !!threadId || !!messages.length;

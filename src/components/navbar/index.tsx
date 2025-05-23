@@ -16,7 +16,7 @@ import {
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { UserInfoSignOut } from "@/features/user-auth-status";
 import { GraphDropdown } from "@/features/graph-dropdown";
-import { CreditsDisplay } from "@/components/credits-display";
+import { CreditBalance } from "@/components/credits/credit-balance";
 
 export function Navbar() {
   return (
@@ -52,7 +52,7 @@ export function Navbar() {
         </div>
         <div className="ml-auto flex items-center space-x-4">
           <div className="hidden items-center space-x-3 md:flex">
-            <CreditsDisplay />
+            <CreditBalance />
             <UserInfoSignOut />
             <GraphDropdown />
           </div>
@@ -70,7 +70,7 @@ export function Navbar() {
             <SheetContent side="right">
               <nav className="flex flex-col gap-4">
                 <div className="mb-4">
-                  <CreditsDisplay />
+                  <CreditBalance />
                 </div>
                 <Link
                   href="/"

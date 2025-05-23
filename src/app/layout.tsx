@@ -4,6 +4,7 @@ import { Inter } from "next/font/google";
 import React from "react";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { AuthProvider } from "@/providers/Auth";
+import { CreditsProvider } from "@/providers/Credits";
 import AuthLayout from "./auth-layout";
 
 const inter = Inter({
@@ -27,7 +28,9 @@ export default function RootLayout({
       <body className={inter.className}>
         <NuqsAdapter>
           <AuthProvider>
-            <AuthLayout>{children}</AuthLayout>
+            <CreditsProvider>
+              <AuthLayout>{children}</AuthLayout>
+            </CreditsProvider>
           </AuthProvider>
         </NuqsAdapter>
       </body>
