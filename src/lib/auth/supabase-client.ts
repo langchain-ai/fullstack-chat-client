@@ -1,5 +1,8 @@
+"use client";
+
 import { createClient } from "@supabase/supabase-js";
 import { createBrowserClient } from "@supabase/ssr";
+import { useState, useEffect } from "react";
 
 let supabaseInstance: ReturnType<typeof createClient> | null = null;
 
@@ -50,4 +53,55 @@ export function getSupabaseClient() {
   }
 
   return supabaseInstance;
+}
+
+type User = {
+  id: string;
+  email: string;
+} | null;
+
+// Export the client instance for direct use
+export const supabase = getSupabaseClient();
+
+export function useUser() {
+  const [user, setUser] = useState<User>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const supabaseClient = getSupabaseClient();
+
+    // Get the current user
+    const getCurrentUser = async () => {
+      try {
+        const {
+          data: { user },
+        } = await supabaseClient.auth.getUser();
+        setUser(user?.email ? { id: user.id, email: user.email } : null);
+      } catch (error) {
+        console.error("Error getting user:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    getCurrentUser();
+
+    // Listen for auth state changes
+    const {
+      data: { subscription },
+    } = supabaseClient.auth.onAuthStateChange((_event, session) => {
+      setUser(
+        session?.user?.email
+          ? { id: session.user.id, email: session.user.email }
+          : null,
+      );
+      setLoading(false);
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
+
+  return { user, loading };
 }

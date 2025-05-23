@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { BranchSwitcher, CommandBar } from "./shared";
 import { MultimodalPreview } from "@/components/thread/MultimodalPreview";
 import { isBase64ContentBlock } from "@/lib/multimodal-utils";
+import { useCreditDeduction } from "@/hooks/use-credit-deduction";
 
 function EditableContent({
   value,
@@ -42,6 +43,7 @@ export function HumanMessage({
   isLoading: boolean;
 }) {
   const thread = useStreamContext();
+  const { deductCredits } = useCreditDeduction();
   const meta = thread.getMessagesMetadata(message);
   const parentCheckpoint = meta?.firstSeenState?.parent_checkpoint;
 
@@ -49,7 +51,14 @@ export function HumanMessage({
   const [value, setValue] = useState("");
   const contentString = getContentString(message.content);
 
-  const handleSubmitEdit = () => {
+  const handleSubmitEdit = async () => {
+    // Deduct 1 credit before making the LLM request for the edited message
+    const creditResult = await deductCredits({ reason: "edit message" });
+
+    if (!creditResult.success) {
+      return;
+    }
+
     setIsEditing(false);
 
     const newMessage: Message = { type: "human", content: value };

@@ -16,6 +16,7 @@ import {
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { UserInfoSignOut } from "@/features/user-auth-status";
 import { GraphDropdown } from "@/features/graph-dropdown";
+import { CreditBalance } from "@/components/credits/credit-balance";
 
 export function Navbar() {
   return (
@@ -31,32 +32,27 @@ export function Navbar() {
           <NavigationMenu>
             <NavigationMenuList>
               <NavigationMenuItem>
-                <Link
-                  href="/"
-                  legacyBehavior
-                  passHref
+                <NavigationMenuLink
+                  className={navigationMenuTriggerStyle()}
+                  asChild
                 >
-                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                    Chat
-                  </NavigationMenuLink>
-                </Link>
+                  <Link href="/">Chat</Link>
+                </NavigationMenuLink>
               </NavigationMenuItem>
               <NavigationMenuItem>
-                <Link
-                  href="/pricing"
-                  legacyBehavior
-                  passHref
+                <NavigationMenuLink
+                  className={navigationMenuTriggerStyle()}
+                  asChild
                 >
-                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                    Pricing
-                  </NavigationMenuLink>
-                </Link>
+                  <Link href="/pricing">Pricing</Link>
+                </NavigationMenuLink>
               </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
         </div>
         <div className="ml-auto flex items-center space-x-4">
-          <div className="hidden md:flex">
+          <div className="hidden items-center space-x-3 md:flex">
+            <CreditBalance />
             <UserInfoSignOut />
             <GraphDropdown />
           </div>
@@ -73,6 +69,9 @@ export function Navbar() {
             </SheetTrigger>
             <SheetContent side="right">
               <nav className="flex flex-col gap-4">
+                <div className="mb-4">
+                  <CreditBalance />
+                </div>
                 <Link
                   href="/"
                   className="text-lg font-medium"
