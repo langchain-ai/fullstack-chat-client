@@ -1,6 +1,4 @@
 import React from "react";
-import AuthLayout from "./auth-layout";
-import { AuthProvider } from "@/providers/Auth";
 import type { Metadata } from "next";
 import "../globals.css";
 import { Inter } from "next/font/google";
