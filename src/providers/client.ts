@@ -1,16 +1,32 @@
 import { Client } from "@langchain/langgraph-sdk";
 
 export function createClient(apiUrl: string, jwt?: string) {
-  console.log("[createClient] apiUrl=", apiUrl, "jwt=", jwt);
-  const headers = jwt
-    ? {
-        Authorization: `Bearer ${jwt}`,
-        "x-supabase-access-token": jwt,
-      }
-    : undefined;
-  console.log("[createClient] headers=", headers);
-  return new Client({
+  console.log(
+    "[createClient] apiUrl=",
     apiUrl,
-    ...(headers && { headers }),
-  });
+    "jwt=",
+    jwt ? "present" : "missing",
+  );
+
+  // In development, use direct connection since CORS is properly configured
+  const clientApiUrl = apiUrl;
+
+  console.log("[createClient] Using clientApiUrl=", clientApiUrl);
+
+  // Configure the client with proper headers
+  const config: any = {
+    apiUrl: clientApiUrl,
+  };
+
+  // Add authorization headers if JWT is present
+  if (jwt) {
+    config.defaultHeaders = {
+      Authorization: `Bearer ${jwt}`,
+      "Content-Type": "application/json",
+    };
+  }
+
+  console.log("[createClient] config=", config);
+
+  return new Client(config);
 }
