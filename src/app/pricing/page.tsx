@@ -1,6 +1,5 @@
 "use client";
-
-import { useState, useEffect } from "react";
+import { useState} from "react";
 import { Check } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -10,7 +9,7 @@ import {
   CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle,
+  CardTitle
 } from "@/components/ui/card";
 import { Elements, useStripe } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
@@ -28,7 +27,6 @@ const stripePromise = loadStripe(
 // Child component that uses the useStripe hook
 function PricingContent() {
   const [loading, setLoading] = useState<string | null>(null);
-  const [credits, setCredits] = useState<number | null>(null);
   const { user } = useUser();
   const stripe = useStripe();
 
@@ -96,28 +94,6 @@ function PricingContent() {
     },
   ];
 
-  useEffect(() => {
-    // Fetch user's current credits from Supabase/Stripe
-    const fetchCredits = async () => {
-      if (user) {
-        try {
-          // This would be your actual API call to get credits
-          const response = await fetch(`/api/user/credits?userId=${user.id}`);
-          const data = await response.json();
-
-          if (data.credits !== undefined) {
-            setCredits(data.credits);
-          }
-        } catch (error) {
-          console.error("Failed to fetch credits:", error);
-          // For demo purposes, set some example values
-          setCredits(3450);
-        }
-      }
-    };
-
-    fetchCredits();
-  }, [user]);
 
   const handleSubscribe = async (priceId: string) => {
     if (!user) {
