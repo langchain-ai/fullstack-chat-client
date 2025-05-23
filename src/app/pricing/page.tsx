@@ -1,29 +1,38 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { Check, AlertCircle } from "lucide-react"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Switch } from "@/components/ui/switch"
-import { Progress } from "@/components/ui/progress"
-import { Elements, useStripe } from "@stripe/react-stripe-js"
-import { loadStripe } from "@stripe/stripe-js"
-import { createCheckoutSession } from "@/lib/stripe"
-import { useUser } from "@/lib/auth/supabase-client"
-import { toast } from "sonner"
-import { Navbar } from "@/components/navbar"
-import { PLAN_INFO } from "@/lib/stripe-config"
+import { useState, useEffect } from "react";
+import { Check, AlertCircle } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Switch } from "@/components/ui/switch";
+import { Progress } from "@/components/ui/progress";
+import { Elements, useStripe } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+import { createCheckoutSession } from "@/lib/stripe";
+import { useUser } from "@/lib/auth/supabase-client";
+import { toast } from "sonner";
+import { Navbar } from "@/components/navbar";
+import { PLAN_INFO } from "@/lib/stripe-config";
 
 // Initialize Stripe
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || "")
+const stripePromise = loadStripe(
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || "",
+);
 
 // Child component that uses the useStripe hook
 function PricingContent() {
-  const [loading, setLoading] = useState<string | null>(null)
-  const [credits, setCredits] = useState<number | null>(null)
-  const { user } = useUser()
-  const stripe = useStripe()
+  const [loading, setLoading] = useState<string | null>(null);
+  const [credits, setCredits] = useState<number | null>(null);
+  const { user } = useUser();
+  const stripe = useStripe();
 
   const tiers = [
     {
@@ -87,7 +96,7 @@ function PricingContent() {
       priceId: PLAN_INFO.ENTERPRISE.priceId,
       creditLimit: PLAN_INFO.ENTERPRISE.creditLimit,
     },
-  ]
+  ];
 
   useEffect(() => {
     // Fetch user's current credits from Supabase/Stripe
@@ -95,80 +104,85 @@ function PricingContent() {
       if (user) {
         try {
           // This would be your actual API call to get credits
-          const response = await fetch(`/api/user/credits?userId=${user.id}`)
-          const data = await response.json()
+          const response = await fetch(`/api/user/credits?userId=${user.id}`);
+          const data = await response.json();
 
           if (data.credits !== undefined) {
-            setCredits(data.credits)
+            setCredits(data.credits);
           }
         } catch (error) {
-          console.error("Failed to fetch credits:", error)
+          console.error("Failed to fetch credits:", error);
           // For demo purposes, set some example values
-          setCredits(3450)
+          setCredits(3450);
         }
       }
-    }
+    };
 
-    fetchCredits()
-  }, [user])
+    fetchCredits();
+  }, [user]);
 
   const handleSubscribe = async (priceId: string) => {
     if (!user) {
-      toast.error("Please sign in to subscribe to a plan")
-      return
+      toast.error("Please sign in to subscribe to a plan");
+      return;
     }
 
     if (!stripe) {
-      toast.error("Stripe not loaded. Please try again.")
-      return
+      toast.error("Stripe not loaded. Please try again.");
+      return;
     }
 
     try {
-      setLoading(priceId)
+      setLoading(priceId);
 
       // Create checkout session
       const { sessionId } = await createCheckoutSession({
         priceId,
         userId: user.id,
         customerEmail: user.email,
-      })
+      });
 
       // Redirect to Stripe Checkout using React Stripe JS
-      const { error } = await stripe.redirectToCheckout({ sessionId })
+      const { error } = await stripe.redirectToCheckout({ sessionId });
       if (error) {
-        toast.error(error.message)
+        toast.error(error.message);
       }
     } catch (error) {
-      console.error("Failed to create checkout session:", error)
-      toast.error("Failed to process your subscription. Please try again.")
+      console.error("Failed to create checkout session:", error);
+      toast.error("Failed to process your subscription. Please try again.");
     } finally {
-      setLoading(null)
+      setLoading(null);
     }
-  }
+  };
 
   return (
-    <div className="container mx-auto px-4 py-24 max-w-7xl">
-    
-
-      <div className="text-center mb-16">
-        <h1 className="text-4xl font-bold tracking-tight mb-4">Enterprise AI Chatbot Pricing</h1>
-        <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-          Choose the perfect plan for your business needs. Scale your AI capabilities as you grow.
+    <div className="container mx-auto max-w-7xl px-4 py-24">
+      <div className="mb-16 text-center">
+        <h1 className="mb-4 text-4xl font-bold tracking-tight">
+          Enterprise AI Chatbot Pricing
+        </h1>
+        <p className="text-muted-foreground mx-auto max-w-2xl text-xl">
+          Choose the perfect plan for your business needs. Scale your AI
+          capabilities as you grow.
         </p>
       </div>
 
-      <div className="grid md:grid-cols-3 gap-8">
+      <div className="grid gap-8 md:grid-cols-3">
         {tiers.map((tier) => (
           <Card
             key={tier.name}
-            className={`flex flex-col ${tier.popular ? "border-primary shadow-lg relative" : "border-border"}`}
+            className={`flex flex-col ${tier.popular ? "border-primary relative shadow-lg" : "border-border"}`}
           >
             {tier.popular && (
-              <Badge className="absolute -top-2.5 right-6 bg-primary hover:bg-primary">Most Popular</Badge>
+              <Badge className="bg-primary hover:bg-primary absolute -top-2.5 right-6">
+                Most Popular
+              </Badge>
             )}
             <CardHeader>
               <CardTitle className="text-xl">{tier.name}</CardTitle>
-              <CardDescription className="min-h-[50px]">{tier.description}</CardDescription>
+              <CardDescription className="min-h-[50px]">
+                {tier.description}
+              </CardDescription>
               <div className="mt-4">
                 <span className="text-4xl font-bold">${tier.price}</span>
                 <span className="text-muted-foreground ml-2">/month</span>
@@ -177,8 +191,11 @@ function PricingContent() {
             <CardContent className="flex-grow">
               <ul className="space-y-3">
                 {tier.features.map((feature) => (
-                  <li key={feature} className="flex items-start">
-                    <Check className="h-5 w-5 text-green-500 mr-2 shrink-0" />
+                  <li
+                    key={feature}
+                    className="flex items-start"
+                  >
+                    <Check className="mr-2 h-5 w-5 shrink-0 text-green-500" />
                     <span className="text-sm">{feature}</span>
                   </li>
                 ))}
@@ -194,56 +211,71 @@ function PricingContent() {
               >
                 {loading === tier.priceId ? "Processing..." : tier.cta}
               </Button>
-              <p className="text-xs text-center text-muted-foreground mt-3">{tier.ctaDescription}</p>
+              <p className="text-muted-foreground mt-3 text-center text-xs">
+                {tier.ctaDescription}
+              </p>
             </CardFooter>
           </Card>
         ))}
       </div>
 
       <div className="mt-20 text-center">
-        <h2 className="text-2xl font-bold mb-4">Need a custom solution?</h2>
-        <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-          Our enterprise solutions can be tailored to your specific AI chatbot requirements and integration needs.
+        <h2 className="mb-4 text-2xl font-bold">Need a custom solution?</h2>
+        <p className="text-muted-foreground mx-auto mb-6 max-w-2xl">
+          Our enterprise solutions can be tailored to your specific AI chatbot
+          requirements and integration needs.
         </p>
-        <Button variant="outline" size="lg" onClick={() => (window.location.href = "/contact")}>
+        <Button
+          variant="outline"
+          size="lg"
+          onClick={() => (window.location.href = "/contact")}
+        >
           Contact Sales
         </Button>
       </div>
 
       <div className="mt-24 border-t pt-12">
-        <h3 className="text-xl font-semibold mb-6 text-center">Frequently Asked Questions</h3>
-        <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+        <h3 className="mb-6 text-center text-xl font-semibold">
+          Frequently Asked Questions
+        </h3>
+        <div className="mx-auto grid max-w-4xl gap-8 md:grid-cols-2">
           <div>
-            <h4 className="font-medium mb-2">What counts as an AI request?</h4>
+            <h4 className="mb-2 font-medium">What counts as an AI request?</h4>
             <p className="text-muted-foreground text-sm">
-              Each message sent to our AI model counts as one request. Responses from the AI are included in the request
-              count.
+              Each message sent to our AI model counts as one request. Responses
+              from the AI are included in the request count.
             </p>
           </div>
           <div>
-            <h4 className="font-medium mb-2">Can I upgrade my plan mid-month?</h4>
+            <h4 className="mb-2 font-medium">
+              Can I upgrade my plan mid-month?
+            </h4>
             <p className="text-muted-foreground text-sm">
-              Yes, you can upgrade your plan at any time. Your new credit limit will be applied immediately and you'll
-              be charged the prorated difference.
+              Yes, you can upgrade your plan at any time. Your new credit limit
+              will be applied immediately and you'll be charged the prorated
+              difference.
             </p>
           </div>
           <div>
-            <h4 className="font-medium mb-2">Do unused credits roll over?</h4>
+            <h4 className="mb-2 font-medium">Do unused credits roll over?</h4>
             <p className="text-muted-foreground text-sm">
-              No, AI request credits reset at the beginning of each billing cycle and do not roll over to the next
-              month.
+              No, AI request credits reset at the beginning of each billing
+              cycle and do not roll over to the next month.
             </p>
           </div>
           <div>
-            <h4 className="font-medium mb-2">Do you offer discounts for non-profits?</h4>
+            <h4 className="mb-2 font-medium">
+              Do you offer discounts for non-profits?
+            </h4>
             <p className="text-muted-foreground text-sm">
-              Yes, we offer special pricing for non-profit organizations. Please contact our sales team for details.
+              Yes, we offer special pricing for non-profit organizations. Please
+              contact our sales team for details.
             </p>
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 // Main component wrapped with Elements provider
@@ -253,5 +285,5 @@ export default function PricingPage() {
       <Navbar />
       <PricingContent />
     </Elements>
-  )
+  );
 }

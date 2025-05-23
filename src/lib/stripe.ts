@@ -1,12 +1,16 @@
-import { supabase } from "@/lib/auth/supabase-client"
+import { supabase } from "@/lib/auth/supabase-client";
 
 type CheckoutSessionParams = {
-  priceId: string
-  userId: string
-  customerEmail: string
-}
+  priceId: string;
+  userId: string;
+  customerEmail: string;
+};
 
-export async function createCheckoutSession({ priceId, userId, customerEmail }: CheckoutSessionParams) {
+export async function createCheckoutSession({
+  priceId,
+  userId,
+  customerEmail,
+}: CheckoutSessionParams) {
   try {
     // Call your API route that creates a Stripe checkout session
     const response = await fetch("/api/create-checkout-session", {
@@ -19,34 +23,34 @@ export async function createCheckoutSession({ priceId, userId, customerEmail }: 
         userId,
         customerEmail,
       }),
-    })
+    });
 
     if (!response.ok) {
-      const error = await response.json()
-      throw new Error(error.message || "Failed to create checkout session")
+      const error = await response.json();
+      throw new Error(error.message || "Failed to create checkout session");
     }
 
-    return await response.json()
+    return await response.json();
   } catch (error) {
-    console.error("Error creating checkout session:", error)
-    throw error
+    console.error("Error creating checkout session:", error);
+    throw error;
   }
 }
 
 export async function getCustomerSubscription(userId: string) {
   try {
     // Call your API route that fetches the customer's subscription
-    const response = await fetch(`/api/subscriptions?userId=${userId}`)
+    const response = await fetch(`/api/subscriptions?userId=${userId}`);
 
     if (!response.ok) {
-      const error = await response.json()
-      throw new Error(error.message || "Failed to fetch subscription")
+      const error = await response.json();
+      throw new Error(error.message || "Failed to fetch subscription");
     }
 
-    return await response.json()
+    return await response.json();
   } catch (error) {
-    console.error("Error fetching subscription:", error)
-    throw error
+    console.error("Error fetching subscription:", error);
+    throw error;
   }
 }
 
@@ -57,52 +61,61 @@ export async function addUserCredits(userId: string, creditsToAdd: number) {
       .from("users")
       .select("credits_available")
       .eq("id", userId)
-      .single()
+      .single();
 
-    const currentCredits = (currentUser?.credits_available as number) || 0
-    const newCredits = currentCredits + creditsToAdd
+    const currentCredits = (currentUser?.credits_available as number) || 0;
+    const newCredits = currentCredits + creditsToAdd;
 
-    const { error } = await supabase.from("users").update({ 
-      credits_available: newCredits,
-      subscription_status: "active" // Ensure user has active status when adding credits
-    }).eq("id", userId)
+    const { error } = await supabase
+      .from("users")
+      .update({
+        credits_available: newCredits,
+        subscription_status: "active", // Ensure user has active status when adding credits
+      })
+      .eq("id", userId);
 
-    if (error) throw error
+    if (error) throw error;
 
-    return { success: true, newBalance: newCredits }
+    return { success: true, newBalance: newCredits };
   } catch (error) {
-    console.error("Error adding user credits:", error)
-    throw error
+    console.error("Error adding user credits:", error);
+    throw error;
   }
 }
 
-export async function deductUserCredits(userId: string, creditsToDeduct: number) {
+export async function deductUserCredits(
+  userId: string,
+  creditsToDeduct: number,
+) {
   try {
     // Deduct credits from user's balance
     const { data: currentUser, error: fetchError } = await supabase
       .from("users")
       .select("credits_available")
       .eq("id", userId)
-      .single()
+      .single();
 
-    if (fetchError) throw fetchError
+    if (fetchError) throw fetchError;
 
-    const currentBalance = (currentUser?.credits_available as number) || 0
+    const currentBalance = (currentUser?.credits_available as number) || 0;
     if (currentBalance < creditsToDeduct) {
-      throw new Error("Insufficient credits")
+      throw new Error("Insufficient credits");
     }
 
-    const newCredits = currentBalance - creditsToDeduct
+    const newCredits = currentBalance - creditsToDeduct;
 
-    const { error } = await supabase.from("users").update({ 
-      credits_available: newCredits 
-    }).eq("id", userId)
+    const { error } = await supabase
+      .from("users")
+      .update({
+        credits_available: newCredits,
+      })
+      .eq("id", userId);
 
-    if (error) throw error
+    if (error) throw error;
 
-    return { success: true, newBalance: newCredits }
+    return { success: true, newBalance: newCredits };
   } catch (error) {
-    console.error("Error deducting user credits:", error)
-    throw error
+    console.error("Error deducting user credits:", error);
+    throw error;
   }
 }

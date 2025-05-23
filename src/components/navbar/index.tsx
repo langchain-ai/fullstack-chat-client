@@ -32,24 +32,26 @@ export function Navbar() {
           <NavigationMenu>
             <NavigationMenuList>
               <NavigationMenuItem>
-                <NavigationMenuLink className={navigationMenuTriggerStyle()} asChild>
-                  <Link href="/">
-                    Chat
-                  </Link>
+                <NavigationMenuLink
+                  className={navigationMenuTriggerStyle()}
+                  asChild
+                >
+                  <Link href="/">Chat</Link>
                 </NavigationMenuLink>
               </NavigationMenuItem>
               <NavigationMenuItem>
-                <NavigationMenuLink className={navigationMenuTriggerStyle()} asChild>
-                  <Link href="/pricing">
-                    Pricing
-                  </Link>
+                <NavigationMenuLink
+                  className={navigationMenuTriggerStyle()}
+                  asChild
+                >
+                  <Link href="/pricing">Pricing</Link>
                 </NavigationMenuLink>
               </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
         </div>
         <div className="ml-auto flex items-center space-x-4">
-          <div className="hidden md:flex items-center space-x-3">
+          <div className="hidden items-center space-x-3 md:flex">
             <CreditsDisplay />
             <UserInfoSignOut />
             <GraphDropdown />
