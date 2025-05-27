@@ -8,7 +8,7 @@ interface CreditDeductionOptions {
   reason?: string;
   /** Number of credits to deduct (default: 1) */
   creditsToDeduct?: number;
-  /** Whether to show success toast (default: true) */
+  /** Whether to show success toast (default: false) */
   showSuccessToast?: boolean;
 }
 
@@ -33,7 +33,7 @@ export function useCreditDeduction() {
     const {
       reason = "message",
       creditsToDeduct = 1,
-      showSuccessToast = true,
+      showSuccessToast = false,
     } = options;
 
     // Check if user is authenticated

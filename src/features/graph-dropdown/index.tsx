@@ -40,6 +40,25 @@ export function GraphDropdown() {
     }
   }, [jwt]);
 
+  // Set default selected graph when deployments are loaded and no current selection
+  useEffect(() => {
+    if (
+      !loading &&
+      deployments.length > 0 &&
+      !assistantId &&
+      process.env.NEXT_PUBLIC_ASSISTANT_ID
+    ) {
+      // Check if the default assistant ID exists in the available deployments
+      const defaultDeployment = deployments.find(
+        (d) => d.defaultGraphId === process.env.NEXT_PUBLIC_ASSISTANT_ID,
+      );
+
+      if (defaultDeployment) {
+        setAssistantId(process.env.NEXT_PUBLIC_ASSISTANT_ID);
+      }
+    }
+  }, [loading, deployments, assistantId, setAssistantId]);
+
   if (loading)
     return (
       <div className="flex min-h-[56px] items-center justify-center">

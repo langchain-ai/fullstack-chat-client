@@ -7,7 +7,7 @@ Agent Chat UI is a Next.js application which enables chatting with any LangGraph
 
 ## Setup
 
-1. Clone both repos 
+1. Clone both repos
 
 ```bash
 git clone https://github.com/starmorph/fullstack-chat-server/tree/main
@@ -16,14 +16,16 @@ git clone https://github.com/starmorph/fullstack-chat-client
 ```
 
 ### Terminal Tab 1: Server
+
 ```bash
 1. cp .env.example .env
 2. fill out env
-3. yarn 
+3. yarn
 4. npx @langchain/langgraph-cli dev --no-browser
 ```
 
 ### Terminal Tab 2: Client
+
 ```bash
 1. cp .env.example .env
 2. fill out env
@@ -31,19 +33,21 @@ git clone https://github.com/starmorph/fullstack-chat-client
 ```
 
 ### Terminal Tab 3: Stripe Webhook (for purchases + credits)
+
 ```bash
 stripe listen --events customer.subscription.created,customer.subscription.updated,customer.subscription.deleted --forward-to localhost:3000/api/webhooks/stripe
 ```
 
-### Use the App 
-```markdown 
+### Use the App
+
+```markdown
 1. Open localhost:3000
 2. Sign up -> confirm email
-3. login 
+3. login
 4. pricing page --> purchase credits
-	a. should see stripe events in Terminal Tab 3
+   a. should see stripe events in Terminal Tab 3
 5. should see success page, new credits added
-6. back to home, chat with app, credits get deducted 
+6. back to home, chat with app, credits get deducted
 ```
 
 ## Usage
