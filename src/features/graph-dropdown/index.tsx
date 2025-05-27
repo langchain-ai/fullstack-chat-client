@@ -12,6 +12,14 @@ import { getDeployments } from "@/lib/environment/deployments";
 import { Deployment } from "@/app/types/deployment";
 import { Badge } from "@/components/ui/badge";
 
+/**
+ * GraphDropdown component - Currently not in use
+ *
+ * This component has been removed from the UI in favor of using
+ * process.env.NEXT_PUBLIC_ASSISTANT_ID to set the graph behind the scenes.
+ * The Stream and Thread providers automatically fall back to the environment
+ * variable when no assistantId query state is present.
+ */
 export function GraphDropdown() {
   const { session } = useAuthContext();
   const jwt = session?.accessToken;
