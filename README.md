@@ -10,9 +10,9 @@ Agent Chat UI is a Next.js application which enables chatting with any LangGraph
 1. Clone both repos
 
 ```bash
-git clone https://github.com/starmorph/fullstack-chat-server/tree/main
+git clone https://github.com/langchain-ai/fullstack-chat-server/tree/main
 
-git clone https://github.com/starmorph/fullstack-chat-client
+git clone https://github.com/langchain-ai/fullstack-chat-client
 ```
 
 ### Terminal Tab 1: Server
